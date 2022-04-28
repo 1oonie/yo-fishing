@@ -29,6 +29,17 @@ class Fishing(app_commands.Group, name="fishing"):
 
         super().__init__()
 
+    @app_commands.command(name="cast", description="Cast your line out into the realm of fishies")
+    async def _cast(self, interaction: discord.Interaction):
+        ...
+
+    async def interaction_check(self, interaction: discord.Interaction) -> bool:
+        user = await self.bot.d.fetchone("SELECT * FROM users WHERE id=?;", interaction.user.id)
+        if user is None:
+            await interaction.response.send_message("You are not registered in my database, let me remedy that for you...")
+            await self.bot.d.execute("INSERT INTO users (id) VALUES (?);", interaction.user.id)
+            return False
+        return True
 
 async def setup(bot: YoFishing):
     bot.tree.add_command(Fishing(bot))

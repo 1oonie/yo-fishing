@@ -7,10 +7,11 @@ CREATE TABLE users (
     fish INT DEFAULT 0
 );
 
-DROP TABLE IF EXISTS inventory;
+DROP TABLE IF EXISTS items;
 
-CREATE TABLE inventory (
-    owner_id BIGINT PRIMARY KEY,
+CREATE TABLE items (
+    id VARCHAR(16) PRIMARY KEY,
+    owner_id BIGINT NOT NUll,
     item INT NOT NULL,
     rating SMALLINT NOT NULL
 );
