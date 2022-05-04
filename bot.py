@@ -2,7 +2,24 @@ import os
 
 import asqlite
 import discord
+from discord import app_commands
 from discord.ext import commands
+
+
+class Tree(app_commands.CommandTree):
+    async def on_error(
+        self, interaction: discord.Interaction, error: app_commands.AppCommandError
+    ):
+        if not interaction.response.is_done():
+            method = interaction.response.send_message
+        else:
+            method = interaction.followup.send
+
+        if isinstance(error, app_commands.errors.CommandOnCooldown):
+            await method(
+                f"Slow down! You can use this command again in {error.retry_after:.2f} seconds",
+                ephemeral=True,
+            )
 
 
 class YoFishing(commands.Bot):
@@ -19,6 +36,7 @@ class YoFishing(commands.Bot):
             allowed_mentions=discord.AllowedMentions(
                 everyone=False, roles=False, users=False
             ),
+            tree_cls=Tree,
             owner_id=737928480389333004,
         )
 

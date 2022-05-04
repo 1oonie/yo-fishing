@@ -3,8 +3,8 @@ import textwrap
 import traceback
 
 import discord
-from discord import app_commands, ui
 import tabulate
+from discord import app_commands, ui
 
 from bot import YoFishing
 
@@ -79,8 +79,12 @@ class Dev(app_commands.Group, name="dev"):
         if not len(results):
             return await interaction.response.send_message("Executed SQL successfully")
 
-        table = tabulate.tabulate([list(row) for row in results], headers=results[0].keys(), tablefmt="psql")
-        await interaction.response.send_message(f"Executed SQL successfully, returned {len(results)} rows ```\n{table}```")
+        table = tabulate.tabulate(
+            [list(row) for row in results], headers=results[0].keys(), tablefmt="psql"
+        )
+        await interaction.response.send_message(
+            f"Executed SQL successfully, returned {len(results)} rows ```\n{table}```"
+        )
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
         if interaction.user.id != self.bot.owner_id:
